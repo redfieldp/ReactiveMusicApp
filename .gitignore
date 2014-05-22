@@ -1,0 +1,8 @@
+/bin/data
+/bin/reactivemusicapp
+/lib
+*.prefs
+
+.classpath
+
+.project
