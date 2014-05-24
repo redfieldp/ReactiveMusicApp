@@ -10,8 +10,9 @@ public abstract class ReactiveMusicApp extends PApplet {
     AudioInput userInput;
     int bandCount;
     int[] bandRanges;
-    int[] currentBandLevels;
-    int[] bandMaxes;
+    float[] actualBandLevels;
+    float[] scaledBandLevels;
+    float[] bandMaxes;
     
     boolean drawInterface = false;
 
@@ -48,7 +49,15 @@ public abstract class ReactiveMusicApp extends PApplet {
      * @param myBandCount the number of volume bands the user desires
      */
     public void setBandCount(int myBandCount) {
-        
+        bandRanges = new int[myBandCount];
+        actualBandLevels = new float[myBandCount];
+        bandMaxes = new float[myBandCount];
+        for (int i = 0; i < myBandCount; i++) {
+            bandRanges[i] = (i + 1) * (userInput.bufferSize()/myBandCount);
+            actualBandLevels[i] = 0;
+            scaledBandLevels[i] = 0;
+            bandMaxes[i] = 0;
+        }
     }
     
     /**
