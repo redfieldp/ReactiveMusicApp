@@ -3,11 +3,13 @@ package reactivemusicapp;
 import processing.core.PApplet;
 import ddf.minim.AudioInput;
 import ddf.minim.Minim;
+import ddf.minim.analysis.FFT;
 
 
 public abstract class ReactiveMusicApp extends PApplet {
     Minim minim;
     AudioInput userInput;
+    FFT leftFFT, rightFFT;
     int bandCount;
     int[] bandRanges;
     float[] actualBandLevels;
@@ -19,7 +21,11 @@ public abstract class ReactiveMusicApp extends PApplet {
     public void setup() {
         // Setup variables for the reactive audio hooks
         minim = new Minim(this);
-        userInput = minim.getLineIn(Minim.STEREO);
+        userInput = minim.getLineIn(Minim.STEREO, 4096, 44100);
+        
+        leftFFT = new FFT(userInput.left.size(), 44100);
+        rightFFT = new FFT(userInput.right.size(), 44100);
+        
         bandCount = 5;
         setBandCount(bandCount);
         
@@ -35,14 +41,14 @@ public abstract class ReactiveMusicApp extends PApplet {
         // Once the user's drawing is done, we draw over the visuals if they are active
         if(drawInterface) {
             int bandRangeCounter = 0;
-            for(int i = 0; i < userInput.bufferSize() - 1; i++)
+            for(int i = 0; i < leftFFT.specSize() - 1; i++)
             {
               stroke(0, 128);
               
               // Scale some data for drawing purposes
-              int xCoord = (int)map(i, 0, userInput.bufferSize() - 1, 0, width);
-              int scaledHeightLeft = (int)map(userInput.left.get(i), -1, 1, 0, height/2);
-              int scaledHeightRight = (int)map(userInput.right.get(i), -1, 1, 0, height/2);
+              int xCoord = (int)map(i, 0, leftFFT.specSize() - 1, 0, width);
+              int scaledHeightLeft = (int)leftFFT.getBand(i);
+              int scaledHeightRight = (int)rightFFT.getBand(i);
               
               // For each channel draw a line of current levels so we can see where the 
               // waveforms fall in the selected bands
@@ -82,7 +88,7 @@ public abstract class ReactiveMusicApp extends PApplet {
         scaledBandLevels = new float[myBandCount];
         bandMaxes = new float[myBandCount];
         for (int i = 0; i < myBandCount; i++) {
-            bandRanges[i] = (i + 1) * (userInput.bufferSize()/myBandCount);
+            bandRanges[i] = (i + 1) * (leftFFT.specSize()/myBandCount);
             actualBandLevels[i] = 0;
             scaledBandLevels[i] = 0;
             bandMaxes[i] = 0;
@@ -93,7 +99,8 @@ public abstract class ReactiveMusicApp extends PApplet {
      * Update the audio data based on current number of bands and the active input
      */
     public void updateAudioData() {
-        
+        leftFFT.forward(userInput.left);
+        rightFFT.forward(userInput.right);
     }
     
     /**
