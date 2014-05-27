@@ -28,7 +28,7 @@ public abstract class ReactiveMusicApp extends PApplet {
         rightFFT = new FFT(userInput.right.size(), 44100);
 
         // Starting with the lower 1/4 of the FFT usually covers most music output
-        fftCap = leftFFT.specSize()/15;
+        fftCap = leftFFT.specSize()/10;
         
         setBandCount(5);
 
@@ -58,13 +58,13 @@ public abstract class ReactiveMusicApp extends PApplet {
                 line( xCoord, height/2, xCoord, (height/2) - scaledHeightLeft);
                 line( xCoord, height, xCoord, height - scaledHeightRight);
 
-                // If one of the band ranges stops here, draw an indicator line
+                // If one of the band ranges stops here, draw a volume indicator line
                 if (bandRanges[bandRangeCounter] == i) {
                     if (bandRangeCounter < bandRanges.length - 1) {
                         bandRangeCounter++;
                     }
                     stroke(255,0,0);
-                    line(xCoord, height, xCoord, 0);
+                    line(xCoord, 0, xCoord, (int)(map(actualBandLevels[bandRangeCounter], 0, bandMaxes[bandRangeCounter], 0, height)));
                 }
             }
         }
@@ -132,10 +132,15 @@ public abstract class ReactiveMusicApp extends PApplet {
         
         // Add the bands in each range to the level counters
         int bandRangeCounter = 0;
+        
+        for (int i = 0; i < actualBandLevels.length; i++) {
+            actualBandLevels[i] = 0;
+        }
+        
         for (int i = 0; i < leftFFT.specSize(); i++) {
-            actualBandLevels[bandRangeCounter] += leftFFT.getBand(i);
-            actualBandLevels[bandRangeCounter] += rightFFT.getBand(i);
-            
+            if (actualBandLevels[bandRangeCounter] < leftFFT.getBand(i)) {
+                actualBandLevels[bandRangeCounter] = leftFFT.getBand(i);
+            }
             // When reaching in the end of the 
             if (bandRanges[bandRangeCounter] == i) {
                 // If we surpassed the previous max for this range, store the max
@@ -145,6 +150,7 @@ public abstract class ReactiveMusicApp extends PApplet {
                 
                 if (bandRangeCounter < bandRanges.length - 1) {
                     // Move to the next range segment if there is one
+                    scaledBandLevels[bandRangeCounter] = map(actualBandLevels[bandRangeCounter], 0, bandMaxes[bandRangeCounter], 0, 255);
                     bandRangeCounter++;
                 }
                 else {
