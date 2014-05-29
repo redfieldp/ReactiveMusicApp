@@ -16,6 +16,8 @@ public abstract class ReactiveMusicApp extends PApplet {
     float[] scaledBandLevels;
     float[] bandMaxes;
     int fftCap;
+    int subMode = 0;
+    int mode = 0;
 
     boolean active = false;
 
@@ -94,7 +96,46 @@ public abstract class ReactiveMusicApp extends PApplet {
         }
         else {
             // Else call the user's key controls
-            keyPressedImpl();
+            if (key == '1' ){
+                mode = 1;
+            }
+            else if (key == '2') {
+                mode = 2;
+            }
+            else if (key == '3') {
+                mode = 3;
+            }
+            else if (key == '4') {
+                mode = 4;
+            }
+            else if (key == '5') {
+                mode = 5;
+            }
+            else if (key == '6') {
+                mode = 6;
+            }
+            else if (key == '7') {
+                mode = 7;
+            }
+            else if (key == '8') {
+                mode = 8;
+            }
+            else if (key == '9') {
+                mode = 9;
+            }
+            else if (key == '0') {
+                // mode 0 is blackout
+                mode = 0;
+            }
+            else if (key == 'q') {
+                subMode = 0;
+            }
+            else if (key == 'w') {
+                subMode = 1;
+            }
+            else if (key == 'e') {
+                subMode = 2;
+            }
         }
     }
 
