@@ -136,6 +136,15 @@ public abstract class ReactiveMusicApp extends PApplet {
             else if (key == 'e') {
                 subMode = 2;
             }
+            else if (key == 'r') {
+                subMode = 3;
+            }
+            else if (key == 't') {
+                subMode = 4;
+            }
+            else if (key == 'y') {
+                subMode = 5;
+            }
         }
     }
 
