@@ -31,7 +31,7 @@ public abstract class ReactiveMusicApp extends PApplet {
 
         // Starting with the lower 1/4 of the FFT usually covers most music output
         fftCap = leftFFT.specSize()/10;
-        
+
         setBandCount(5);
 
         // After we have setup our variables, call the user's setup
@@ -45,6 +45,7 @@ public abstract class ReactiveMusicApp extends PApplet {
 
         // Once the user's drawing is done, we draw over the visuals if they are active
         if(active) {
+            background(255);
             int bandRangeCounter = 0;
             for(int i = 0; i < fftCap - 1; i++)
             {
@@ -166,7 +167,7 @@ public abstract class ReactiveMusicApp extends PApplet {
             bandMaxes[i] = 0;
         }
     }
-    
+
     public void setFFTCap(int newCap) {
         fftCap = newCap;
         setBandCount(bandCount);
@@ -179,34 +180,34 @@ public abstract class ReactiveMusicApp extends PApplet {
         // Push FFT
         leftFFT.forward(userInput.left);
         rightFFT.forward(userInput.right);
-        
+
         // Add the bands in each range to the level counters
         int bandRangeCounter = 0;
-        
+
         for (int i = 0; i < actualBandLevels.length; i++) {
             actualBandLevels[i] = 0;
         }
-        
+
         for (int i = 0; i < leftFFT.specSize(); i++) {
-            if (actualBandLevels[bandRangeCounter] < leftFFT.getBand(i)) {
-                actualBandLevels[bandRangeCounter] = leftFFT.getBand(i);
-            }
-            // When reaching in the end of the 
-            if (bandRanges[bandRangeCounter] == i) {
-                // If we surpassed the previous max for this range, store the max
-                if (actualBandLevels[bandRangeCounter] > bandMaxes[bandRangeCounter]) {
-                    bandMaxes[bandRangeCounter] = actualBandLevels[bandRangeCounter];
+            if (bandRangeCounter < bandRanges.length) {
+                if (actualBandLevels[bandRangeCounter] < leftFFT.getBand(i)) {
+                    actualBandLevels[bandRangeCounter] = leftFFT.getBand(i);
                 }
-                
-                if (bandRangeCounter < bandRanges.length - 1) {
+                // When reaching in the end of the 
+                if (bandRanges[bandRangeCounter] == i) {
+                    // If we surpassed the previous max for this range, store the max
+                    if (actualBandLevels[bandRangeCounter] > bandMaxes[bandRangeCounter]) {
+                        bandMaxes[bandRangeCounter] = actualBandLevels[bandRangeCounter];
+                    }
                     // Move to the next range segment if there is one
                     scaledBandLevels[bandRangeCounter] = map(actualBandLevels[bandRangeCounter], 0, bandMaxes[bandRangeCounter], 0, 255);
                     bandRangeCounter++;
                 }
-                else {
-                    // We don't need to store data from any of the FFT range above our max
-                    break;
-                }
+
+            }
+            else {
+                // We don't need to store data from any of the FFT range above our max
+                break;
             }
         }
     }

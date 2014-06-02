@@ -24,13 +24,20 @@ public class JuneThirdElaphant extends ReactiveMusicApp
             int triangleYDensity = 18;
             for (int i = 0; i < triangleXDensity + 100; i++) {
                 for (int j = 0; j < triangleYDensity + 100; j++) {
-                    float value = scaledBandLevels[i % scaledBandLevels.length];
+                    float value = scaledBandLevels[(i % scaledBandLevels.length)];
                     float shapeSize = map(value, 0, 255, 0, 150);
                     int currentX = (width/triangleXDensity) * i;
                     int currentY = (int)(((height/triangleYDensity) * j));
                     
                     if (subMode == 1) {
                         currentY = (int)(((height/triangleYDensity) * j) - (frameCount % height * 3));
+                    }
+                    else if (subMode == 3) {
+                        currentY = (int)(((height/triangleYDensity) * j) - (frameCount % height * 6));
+                    }
+                    
+                    if (subMode == 4) {
+                        shapeSize = map(value, 0, 255, 0, 500);
                     }
                     
                     if ((i + j) % (int)random(1,5) == 0) {
