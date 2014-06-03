@@ -95,7 +95,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
         else if (mode == 5) {
             // Mirror Ball
             background(0);
-            translate(width/2, height/2, 200);
+            translate(width/2, height/2, 500);
             noStroke();
             if (subMode == 0) {
                 rotateY(frameCount * PI/800);
@@ -135,10 +135,19 @@ public class JuneThirdElaphant extends ReactiveMusicApp
             // End To Begin
             background(0);
 
-            theta += .1;
+            for (int i = 0; i < scaledBandLevels.length; i++) {
+                if (modSizes[i] < scaledBandLevels[i] && modSizes[i] < 60) {
+                    modSizes[i]+=2;
+                }
+                else  if (modSizes[i] > 5) {
+                    modSizes[i]--;
+                }
+            }
             
+            theta += .2;
+
             if (subMode >=3) {
-                theta+=.1;
+                theta += .6;
             }
 
             float tempAngle = theta;
@@ -148,17 +157,26 @@ public class JuneThirdElaphant extends ReactiveMusicApp
             }
 
             noStroke();
-
+            if (subMode >= 4) {
+                translate(0, height/2);
+            }
+            int currentFrameCount = frameCount;
             for (int x = 0; x < yvalues.length; x++) {
-                fill(0,random(128,255),255, scaledBandLevels[x % scaledBandLevels.length]);
-                ellipse(x*xspacing - period/2, height/2+yvalues[x], scaledBandLevels[x % scaledBandLevels.length]/2, scaledBandLevels[x % scaledBandLevels.length]/2);
+                if (subMode >= 4) {
+                    fill(0,random(128,255),255, scaledBandLevels[x % scaledBandLevels.length] * 3);
+                    rotateX(currentFrameCount * (PI/200));
+                }
+                else {
+                    fill(0,random(128,255),255, scaledBandLevels[x % scaledBandLevels.length]);
+                }
+                ellipse(x*xspacing - period/2, height/2+yvalues[x], modSizes[x % modSizes.length], modSizes[x % modSizes.length]);
                 if (subMode >= 1) {
-                    ellipse(x*xspacing, height/2+yvalues[x] - height/4, scaledBandLevels[x % scaledBandLevels.length]/2, scaledBandLevels[x % scaledBandLevels.length]/2);
-                    ellipse(x*xspacing, height/2+yvalues[x] + height/4, scaledBandLevels[x % scaledBandLevels.length]/2, scaledBandLevels[x % scaledBandLevels.length]/2);
+                    ellipse(x*xspacing, height/2+yvalues[x] - height/4, modSizes[x % modSizes.length], modSizes[x % modSizes.length]);
+                    ellipse(x*xspacing, height/2+yvalues[x] + height/4, modSizes[x % modSizes.length], modSizes[x % modSizes.length]);
                 }
                 if (subMode >= 2) {
-                    ellipse(x*xspacing, height/2+yvalues[x] - height/8, scaledBandLevels[x % scaledBandLevels.length]/2, scaledBandLevels[x % scaledBandLevels.length]/2);
-                    ellipse(x*xspacing, height/2+yvalues[x] + height/8, scaledBandLevels[x % scaledBandLevels.length]/2, scaledBandLevels[x % scaledBandLevels.length]/2);
+                    ellipse(x*xspacing, height/2+yvalues[x] - height/8, modSizes[x % modSizes.length], modSizes[x % modSizes.length]);
+                    ellipse(x*xspacing, height/2+yvalues[x] + height/8, modSizes[x % modSizes.length], modSizes[x % modSizes.length]);
                 }
             }
         }
@@ -197,10 +215,8 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     if (modSizes[i] < scaledBandLevels[i]) {
                         modSizes[i]+=40;
                     }
-                    else {
-                        if (modSizes[i] > 0) {
-                            modSizes[i]--;
-                        }
+                    else if (modSizes[i] > 40) {
+                        modSizes[i]--;
                     }
                     image(mod, ((width/scaledBandLevels.length) * i) + ((width/scaledBandLevels.length)/2), (height/2), modSizes[i], modSizes[i]);
                 }
@@ -210,7 +226,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     if (modSizes[i] < scaledBandLevels[i]) {
                         modSizes[i]+=20;
                     }
-                    else if (modSizes[i] > 0) {
+                    else  if (modSizes[i] > 40) {
                         modSizes[i]--;
                     }
                 }
@@ -226,7 +242,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     if (modSizes[i] < scaledBandLevels[i]) {
                         modSizes[i]+=20;
                     }
-                    else if (modSizes[i] > 0) {
+                    else  if (modSizes[i] > 40) {
                         modSizes[i]--;
                     }
                 }
@@ -237,13 +253,31 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     }
                 }
             }
+            else if (subMode == 4) {
+                for (int i = 0; i < scaledBandLevels.length; i++) {
+                    if (modSizes[i] < scaledBandLevels[i]) {
+                        modSizes[i]+=20;
+                    }
+                    else  if (modSizes[i] > 40) {
+                        modSizes[i]--;
+                    }
+                }
+                for (int j = 0; j < 8; j++) {
+                    rotateY(j * (PI/8));
+                    for (int k = 0; k < height; k+= 300) {
+                        for (int i = 0; i < scaledBandLevels.length; i++) {
+                            image(mod, ((width/scaledBandLevels.length) * i) + ((width/scaledBandLevels.length)/2), k, modSizes[i], modSizes[i]);
+                        }
+                    }
+                }
+            }
         }       
         else if (mode == 4) {
             background(0);
             noStroke();
             for (int i = 0; i < letterStrings.length; i++) {    
-                fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
                 if (subMode == 0) {
+                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
                     if (i < letterStrings.length/2) {
                         text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), (height/2) + 75);
                     }
@@ -252,18 +286,41 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     }
                 }
                 else if (subMode == 1) {
-                    if (i < letterStrings.length/2) {
-
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), (height/2));
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), (height/2) - height/4);
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), (height/2) + height/4);
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), (height/2) + (height/4)*2);
+                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                    for (int j = -100; j < height + 100; j+=200) {
+                        if (i < letterStrings.length/2) {
+                            text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), j);
+                        }
+                        else {
+                            text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, j);
+                        }
                     }
-                    else {
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, (height/2));
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, (height/2) + height/4);
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, (height/2) + (height/4)*2);
-                        text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, (height/2) - height/4);
+                }
+                else if (subMode == 2) {
+                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                    for (int j = -100 - (frameCount % 400); j < height + 600; j+=200) {
+                        if (i < letterStrings.length/2) {
+                            text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), j);
+                        }
+                        else {
+                            text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, j);
+                        }
+                    }
+                }
+                else if (subMode == 3) {
+                    for (int j = -100; j < height + 100; j+=200) {
+                        if (random(0,1) < .5) {
+                            fill(0,250,255, scaledBandLevels[i % scaledBandLevels.length]);
+                        }
+                        else {
+                            fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                        }
+                        if (i < letterStrings.length/2) {
+                            text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), j);
+                        }
+                        else {
+                            text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) + scaledBandLevels[i % scaledBandLevels.length] + (i * 100) - 400, j);
+                        }
                     }
                 }
             }
@@ -291,7 +348,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
             trigger = !trigger;
         }
     }
-    
+
     public static void main(String [] args) 
     {
         // Full screen code from http://pehrhovey.net/blog/2009/02/fullscreen-in-processingorg-with-eclipse/

@@ -253,7 +253,7 @@ public abstract class ReactiveMusicApp extends PApplet {
                     }
                     
                     // Move to the next range segment if there is one
-                    scaledBandLevels[bandRangeCounter] = map(actualBandLevels[bandRangeCounter], 0, (float)(bandMaxes[bandRangeCounter] * 1.10), 0, 255);
+                    scaledBandLevels[bandRangeCounter] = map(actualBandLevels[bandRangeCounter], 0, (float)(bandMaxes[bandRangeCounter] * .8), 0, 255);
                     bandRangeCounter++;
                 }
 
