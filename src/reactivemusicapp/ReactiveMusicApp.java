@@ -1,5 +1,9 @@
 package reactivemusicapp;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.util.Arrays;
+
 import processing.core.PApplet;
 import ddf.minim.AudioInput;
 import ddf.minim.Minim;
@@ -14,14 +18,51 @@ public abstract class ReactiveMusicApp extends PApplet {
     int[] bandRanges;
     float[] actualBandLevels;
     float[] scaledBandLevels;
+    float[] smoothedBandLevels;
     float[] bandMaxes;
     int fftCap;
     int subMode = 0;
     int mode = 0;
 
     boolean active = false;
+    
+    // Full screen vars
+    int WIDTH, HEIGHT;
+    
+    public void init(){
+
+        // Full screen code from http://pehrhovey.net/blog/2009/02/fullscreen-in-processingorg-with-eclipse/
+        if(frame!=null){
+            frame.removeNotify();//make the frame not displayable
+            frame.setResizable(false);
+            frame.setUndecorated(true);
+            println("frame is at "+frame.getLocation());
+            frame.addNotify();
+        }
+        super.init();
+        // End full screen code
+    }
 
     public void setup() {
+        // Start Full screen code from http://pehrhovey.net/blog/2009/02/fullscreen-in-processingorg-with-eclipse/
+        //***** figure out the display environment ****/
+        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice devices[] = environment.getScreenDevices();
+        System.out.println(Arrays.toString(devices));
+
+        if(devices.length>1 ){ //we have a 2nd display/projector
+            //learn the true dimensions of the secondary display
+            WIDTH =devices[1].getDisplayMode().getWidth();
+            HEIGHT= devices[1].getDisplayMode().getHeight();
+            println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" b/c of 2ndary display");
+        }else{ //no 2nd screen but make it fullscreen anyway
+            WIDTH =devices[0].getDisplayMode().getWidth();
+            HEIGHT= devices[0].getDisplayMode().getHeight();
+            println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" to fit primary display");
+        }
+        size(WIDTH, HEIGHT, OPENGL);
+        // End full screen code
+        
         // Setup variables for the reactive audio hooks
         minim = new Minim(this);
         userInput = minim.getLineIn(Minim.STEREO, 4096, 44100);
@@ -98,33 +139,43 @@ public abstract class ReactiveMusicApp extends PApplet {
         else {
             // Else call the user's key controls
             if (key == '1' ){
+                subMode = 0;
                 mode = 1;
             }
             else if (key == '2') {
+                subMode = 0;
                 mode = 2;
             }
             else if (key == '3') {
+                subMode = 0;
                 mode = 3;
             }
             else if (key == '4') {
+                subMode = 0;
                 mode = 4;
             }
             else if (key == '5') {
+                subMode = 0;
                 mode = 5;
             }
             else if (key == '6') {
+                subMode = 0;
                 mode = 6;
             }
             else if (key == '7') {
+                subMode = 0;
                 mode = 7;
             }
             else if (key == '8') {
+                subMode = 0;
                 mode = 8;
             }
             else if (key == '9') {
+                subMode = 0;
                 mode = 9;
             }
             else if (key == '0') {
+                subMode = 0;
                 // mode 0 is blackout
                 mode = 0;
             }
@@ -200,8 +251,9 @@ public abstract class ReactiveMusicApp extends PApplet {
                     if (actualBandLevels[bandRangeCounter] > bandMaxes[bandRangeCounter]) {
                         bandMaxes[bandRangeCounter] = actualBandLevels[bandRangeCounter];
                     }
+                    
                     // Move to the next range segment if there is one
-                    scaledBandLevels[bandRangeCounter] = map(actualBandLevels[bandRangeCounter], 0, bandMaxes[bandRangeCounter], 0, 255);
+                    scaledBandLevels[bandRangeCounter] = map(actualBandLevels[bandRangeCounter], 0, (float)(bandMaxes[bandRangeCounter] * 1.10), 0, 255);
                     bandRangeCounter++;
                 }
 
