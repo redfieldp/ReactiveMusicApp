@@ -71,7 +71,7 @@ public abstract class ReactiveMusicApp extends PApplet {
         rightFFT = new FFT(userInput.right.size(), 44100);
 
         // Starting with the lower 1/4 of the FFT usually covers most music output
-        fftCap = leftFFT.specSize()/10;
+        fftCap = (leftFFT.specSize()/10) * 4;
 
         setBandCount(5);
 

@@ -8,3 +8,7 @@
 .project
 
 bin/java.policy.applet
+
+*.vlw
+
+*.png

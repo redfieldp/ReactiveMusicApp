@@ -8,7 +8,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 
 public class JuneThirdElaphant extends ReactiveMusicApp
-{
+{ 
 
     PFont font;
 
@@ -33,6 +33,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
     protected void setupImpl()
     {
         // Your setup work should go here
+        hint(DISABLE_DEPTH_TEST);
         font = loadFont("Futura-CondensedExtraBold-200.vlw");
         textFont(font, 200);
         mode = 0;
@@ -277,7 +278,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
             noStroke();
             for (int i = 0; i < letterStrings.length; i++) {    
                 if (subMode == 0) {
-                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length] * 2);
                     if (i < letterStrings.length/2) {
                         text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), (height/2) + 75);
                     }
@@ -286,7 +287,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     }
                 }
                 else if (subMode == 1) {
-                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length] * 2);
                     for (int j = -100; j < height + 100; j+=200) {
                         if (i < letterStrings.length/2) {
                             text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), j);
@@ -297,7 +298,7 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                     }
                 }
                 else if (subMode == 2) {
-                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                    fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length] * 2);
                     for (int j = -100 - (frameCount % 400); j < height + 600; j+=200) {
                         if (i < letterStrings.length/2) {
                             text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), j);
@@ -310,10 +311,10 @@ public class JuneThirdElaphant extends ReactiveMusicApp
                 else if (subMode == 3) {
                     for (int j = -100; j < height + 100; j+=200) {
                         if (random(0,1) < .5) {
-                            fill(0,250,255, scaledBandLevels[i % scaledBandLevels.length]);
+                            fill(0,250,255, scaledBandLevels[i % scaledBandLevels.length] * 4);
                         }
                         else {
-                            fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length]);
+                            fill(234,100,255, scaledBandLevels[i % scaledBandLevels.length] * 4);
                         }
                         if (i < letterStrings.length/2) {
                             text(letterStrings[i], (width/2) - (textWidth(letterStrings[i])/2) - scaledBandLevels[i % scaledBandLevels.length] - (400 - (i * 100)), j);
